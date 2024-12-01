@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
-const fetchJoke = createAsyncThunk("jokes/jokecategory", async function (category) {
+//Fetch Joke 
+const fetchJoke = createAsyncThunk("jokes/fetchthejokecategory", async function (category) {
     return axios
         .get(`https://api.chucknorris.io/jokes/random?category=${category}`)
         .then(function (result) {
@@ -11,9 +11,19 @@ const fetchJoke = createAsyncThunk("jokes/jokecategory", async function (categor
         })
 })
 
+//Fetch Categories
+const fetchCategory = createAsyncThunk("jokes/fetchthetotalcategory",async function (){
+    return axios
+    .get(`https://api.chucknorris.io/jokes/categories`)
+    .then(function(data){
+        return data.data
+    })
+})
+
 
 const initialState = {
-    joke: "No Joke"
+    joke: "No Joke",
+    categories:[]
 }
 
 const jokeSlice = createSlice({
@@ -30,9 +40,12 @@ const jokeSlice = createSlice({
         .addCase(fetchJoke.fulfilled, (state, action) => {
             state.joke = action.payload
         })
+        .addCase(fetchCategory.fulfilled, (state,action)=>{
+            state.categories = action.payload
+        })
     }
 })
 
 export default jokeSlice
 
-export { fetchJoke }
+export { fetchJoke,fetchCategory }
